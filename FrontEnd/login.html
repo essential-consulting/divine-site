@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <main class="container">
+        <section class="box">
+            <h1>Login</h1>
+
+            <form id="form_login">
+                <label for="input_email_login">Email</label>
+                <input type="email" id="input_email_login" name="email" placeholder="Digite seu email" />
+
+                <label for="input_senha_login">Senha</label>
+                <input type="password" id="input_senha_login" name="senha" placeholder="Digite sua senha" />
+
+                <button class="botao_login" type="button" onclick="logar()">Entrar</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
+<script>
+
+    function isBlank(valor) {
+        if(valor == null || typeof valor !== "string" || valor.trim().length === 0) {
+            return true
+        } else {
+            return false        
+        }
+    }
+
+    function logar() {
+        email = (input_email_login.value) 
+        senha = (input_senha_login.value)
+    
+        if(isBlank(email) || isBlank(senha)) {
+            alert("Todos os campos do cadastro devem estar preenchidos!")
+        } else if(!email.includes("@")) {
+            alert("O endereço de email deve ser válido!")
+        } else {
+            alert("Login concluído com sucesso!")
+
+            fetch("http://localhost:8080/usuarios/login", {
+                method: "POST",
+                body: JSON.stringify({
+                email: email,
+                senha: senha,
+                }),
+                headers: { "Content-Type": "application/json" }
+                })
+                    .then((resposta) => {
+                    if (resposta.status === 200) {
+                    return resposta.json();
+                    } else {
+                    alert("Login mal sucedido")
+                    }
+                    })
+                        .then(dadosUsuario => {
+                        console.log("Dados do Usuário:" + dadosUsuario)
+                        alert("Login realizado com sucesso!")
+
+                        input_email_login.value = ""
+                        input_senha_login.value = ""
+                        });
+
+                
+                
+        }
+
+        
+                
+        
+
+    }
+
+</script>

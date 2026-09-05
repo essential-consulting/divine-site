@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <main class="container">
+        <section class="box">
+            <h1>Cadastro</h1>
+
+            <form id="form_cadastro">
+                <label for="input_nome_cadastro">Nome</label>
+                <input type="text" id="input_nome_cadastro" name="nome" placeholder="Digite seu nome" />
+
+                <label for="input_sobrenome_cadastro">Sobrenome</label>
+                <input type="text" id="input_sobrenome_cadastro" name="sobrenome" placeholder="Digite seu sobrenome"/>
+
+                <label for="input_telefone_cadastro">Telefone</label>
+                <input type="tel" id="input_telefone_cadastro" name="telefone" placeholder="Digite seu telefone"/>
+
+                <label for="input_email_cadastro">Email</label>
+                <input type="email" id="input_email_cadastro" name="email" placeholder="Digite seu email" />
+
+                <label for="input_senha_cadastro">Senha</label>
+                <input type="password" id="input_senha_cadastro" name="senha" placeholder="Digite sua senha" />
+
+                <label for="input_confirmar_senha_cadastro">Confirmar senha</label>
+                <input type="password" id="input_confirmar_senha_cadastro" name="confirmar_senha"
+                    placeholder="Confirme sua senha" />
+
+                <button class="botao_cadastrar" type="button" onclick="cadastrar()">Cadastrar</button>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
+<script>
+
+    // nome = (input_nome_cadastro.value)
+    // sobrenome = (input_sobrenome_cadastro.value)
+    // telefone = (input_telefone_cadastro.value)
+
+    function isBlank(valor) {
+        if(valor == null || typeof valor !== "string" || valor.trim().length === 0) {
+            return true
+        } else {
+            return false        
+        }
+    }
+
+    function temCaracterEspecial(senha) {
+        
+        const regexEspeciais = /[\!@#\$%\^&\*\(\)_\+\-\=\[\]\{\};':",\.\/<>\?\\|~`]/;
+        
+        return regexEspeciais.test(senha);
+    }
+
+
+    function cadastrar() {
+        nome = (input_nome_cadastro.value)
+        sobrenome = (input_sobrenome_cadastro.value)
+        telefone = (input_telefone_cadastro.value)
+        email = (input_email_cadastro.value) 
+        senha = (input_senha_cadastro.value) 
+        senhaConfirmar = (input_confirmar_senha_cadastro.value)
+    
+        if(isBlank(nome) || isBlank(sobrenome) || isBlank(telefone) || isBlank(email) || isBlank(senha) || isBlank(senhaConfirmar)) {
+            alert("Todos os campos do cadastro devem estar preenchidos!")
+        } else if(telefone.length < 11) {
+            alert("O número de telefone deve ser válido!")
+        } else if(!email.includes("@")) {
+            alert("O endereço de email deve ser válido!")
+        } else if(senha.length < 8 || !temCaracterEspecial(senha)) {
+            alert("A senha deve possuir no mínimo 8 caracteres, incluindo um caracter especial!")
+        } else if(senha !== senhaConfirmar) {
+            alert("A senha deve estar igual em ambos os campos!")
+        } else {
+
+            fetch("http://localhost:8080/usuarios", {
+                method: "POST",
+                body: JSON.stringify({
+                nome: nome,
+                sobrenome: sobrenome,
+                telefone: telefone,
+                email: email,
+                senha: senha,
+                }),
+                headers: { "Content-Type": "application/json" }
+                })
+                    .then((resposta) => {
+                    if (resposta.status === 201) {
+                    return resposta.json();
+                    } else {
+                    alert("Cadastro mal sucedido")
+                    }
+                    })
+                        .then(dadosUsuario => {
+                        console.log("Dados do Usuário:" + dadosUsuario)
+                        alert("Cadastro concluído com sucesso!")
+                        
+                        input_nome_cadastro.value = ""
+                        input_sobrenome_cadastro.value = ""
+                        input_telefone_cadastro.value = ""
+                        input_email_cadastro.value = ""
+                        input_senha_cadastro.value = ""
+                        input_confirmar_senha_cadastro.value = ""
+                        
+                        window.location = "login.html"
+                        });
+
+                
+                
+        }
+
+        
+                
+        
+
+    }
+
+    
+
+</script>
