@@ -29,6 +29,9 @@
 </html>
 <script>
 
+    input_email_login.value = "carla.regina@gmail.com"
+    input_senha_login.value = "senhaDaCarla123!"
+
     function isBlank(valor) {
         if(valor == null || typeof valor !== "string" || valor.trim().length === 0) {
             return true
@@ -46,7 +49,6 @@
         } else if(!email.includes("@")) {
             alert("O endereço de email deve ser válido!")
         } else {
-            alert("Login concluído com sucesso!")
 
             fetch("http://localhost:8080/usuarios/login", {
                 method: "POST",
